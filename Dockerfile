@@ -1,19 +1,18 @@
-
 # Version: 1.0.0
 FROM hub.baidubce.com/paddlepaddle/paddle:latest-gpu-cuda9.0-cudnn7-dev
 
 # PaddleOCR base on Python3.7
-RUN pip3.7 install --upgrade pip -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip3.7 install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
 
-RUN python3.7 -m pip install paddlepaddle==1.7.2 -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN python3.7 -m pip install paddlepaddle==1.7.2 -i https://mirrors.aliyun.com/pypi/simple
 
-RUN pip3.7 install paddlehub --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN pip3.7 install paddlehub --upgrade -i https://mirrors.aliyun.com/pypi/simple
 
 RUN mkdir -p /home && cd /home
 
 RUN git clone https://gitee.com/PaddlePaddle/PaddleOCR
 
-RUN cd /home/PaddleOCR &&  pip3.7 install -r requirments.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN cd /home/PaddleOCR &&  pip3.7 install -r requirments.txt -i https://mirrors.aliyun.com/pypi/simple
 
 RUN mkdir -p /home/PaddleOCR/inference
 
