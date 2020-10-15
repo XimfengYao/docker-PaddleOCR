@@ -1,3 +1,4 @@
+
 # Version: 1.0.0
 FROM hub.baidubce.com/paddlepaddle/paddle:latest-gpu-cuda9.0-cudnn7-dev
 
@@ -8,21 +9,25 @@ RUN python3.7 -m pip install paddlepaddle==1.7.2 -i https://pypi.tuna.tsinghua.e
 
 RUN pip3.7 install paddlehub --upgrade -i https://pypi.tuna.tsinghua.edu.cn/simple
 
+RUN mkdir -p /home && cd /home
+
 RUN git clone https://gitee.com/PaddlePaddle/PaddleOCR
 
-WORKDIR /PaddleOCR
+RUN cd /home/PaddleOCR &&  pip3.7 install -r requirments.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
-RUN pip3.7 install -r requirments.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+RUN mkdir -p /home/PaddleOCR/inference
 
-RUN mkdir -p /PaddleOCR/inference
-# Download orc detect model(light version). if you want to change normal version, you can change ch_det_mv3_db_infer to ch_det_r50_vd_db_infer, also remember change det_model_dir in deploy/hubserving/ocr_system/params.py）
-ADD https://paddleocr.bj.bcebos.com/ch_models/ch_det_mv3_db_infer.tar /PaddleOCR/inference
-RUN tar xf /PaddleOCR/inference/ch_det_mv3_db_infer.tar -C /PaddleOCR/inference
+ADD https://paddleocr.bj.bcebos.com/20-09-22/mobile/rec/ch_ppocr_mobile_v1.1_rec_infer.tar /home/PaddleOCR/inference
+RUN tar xf /home/PaddleOCR/inference/ch_ppocr_mobile_v1.1_rec_infer.tar -C /home/PaddleOCR/inference
 
-# Download orc recognition model(light version). If you want to change normal version, you can change ch_rec_mv3_crnn_infer to ch_rec_r34_vd_crnn_enhance_infer, also remember change rec_model_dir in deploy/hubserving/ocr_system/params.py）
-ADD https://paddleocr.bj.bcebos.com/ch_models/ch_rec_mv3_crnn_infer.tar /PaddleOCR/inference
-RUN tar xf /PaddleOCR/inference/ch_rec_mv3_crnn_infer.tar -C /PaddleOCR/inference
+ADD https://paddleocr.bj.bcebos.com/20-09-22/mobile/det/ch_ppocr_mobile_v1.1_det_infer.tar /home/PaddleOCR/inference
+RUN tar xf /home/PaddleOCR/inference/ch_ppocr_mobile_v1.1_det_infer.tar -C /home/PaddleOCR/inference
 
+ADD https://paddleocr.bj.bcebos.com/20-09-22/cls/ch_ppocr_mobile_v1.1_cls_infer.tar /home/PaddleOCR/inference
+RUN tar xf /home/PaddleOCR/inference/ch_ppocr_mobile_v1.1_cls_infer.tar -C /home/PaddleOCR/inference
+
+RUN cd /home/PaddleOCR &&export PYTHONPATH=/home/PaddleOCR && hub install deploy/hubserving/ocr_system/
 EXPOSE 8866
+WORKDIR /home/PaddleOCR
 
-CMD ["/bin/bash","-c","export PYTHONPATH=. && hub install deploy/hubserving/ocr_system/ && hub serving start -m ocr_system"]
+CMD ["/bin/bash","-c","export PYTHONPATH=/home/PaddleOCR &&  hub serving start -m ocr_system"]
