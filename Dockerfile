@@ -12,7 +12,7 @@ RUN mkdir -p /home && cd /home
 
 RUN git clone https://gitee.com/PaddlePaddle/PaddleOCR
 
-RUN cd /home/PaddleOCR &&  pip3.7 install -r requirments.txt -i https://mirrors.aliyun.com/pypi/simple
+RUN cd /home/PaddleOCR &&  pip3.7 install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple
 
 RUN mkdir -p /home/PaddleOCR/inference
 
